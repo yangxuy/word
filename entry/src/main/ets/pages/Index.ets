@@ -1,6 +1,7 @@
 import { DictionaryPage } from './children/dictionary';
 import { HomePage } from './children/home';
 import { MePage } from './children/me';
+import { Learn } from './Learn';
 
 @Entry
 @Component
@@ -8,6 +9,7 @@ struct Index {
   private controller: TabsController = new TabsController(); // 初始化Tab控制器
   @State currentIndex: number = 0;
   @StorageProp("bottomHeight") bottomHeight: number = 0;
+  @Provide navStack: NavPathStack = new NavPathStack()
 
   @Builder
   tabBuilder(title: string, targetIndex: number, selectedImg: Resource, normalImg: Resource) {
@@ -33,8 +35,15 @@ struct Index {
     .alignItems(HorizontalAlign.Center)
   }
 
+  @Builder
+  PageMap(name: string) {
+    if (name == 'learn') {
+      Learn()
+    }
+  }
+
   build() {
-    Navigation() {
+    Navigation(this.navStack) {
       Tabs({ barPosition: BarPosition.End, index: this.currentIndex, controller: this.controller }) {
         TabContent() {
           HomePage()
@@ -66,5 +75,6 @@ struct Index {
     .hideTitleBar(true)
     .backgroundColor('#F8F9FB')
     .mode(NavigationMode.Stack)
+    .navDestination(this.PageMap)
   }
 }

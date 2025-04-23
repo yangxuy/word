@@ -1,5 +1,7 @@
 @Component
 export struct HomePage {
+  @Consume navStack: NavPathStack;
+
   build() {
     Column() {
       Row({ space: 18 }) {
@@ -24,6 +26,7 @@ export struct HomePage {
         .width('100%')
         .alignItems(VerticalAlign.Center)
         .justifyContent(FlexAlign.SpaceBetween)
+
         Row().height(20)
         Row() {
           Text("已学0.0%")
@@ -33,6 +36,7 @@ export struct HomePage {
         .width('100%')
         .alignItems(VerticalAlign.Center)
         .justifyContent(FlexAlign.SpaceBetween)
+
         Row().height(8)
         Progress({ value: 24, total: 100, type: ProgressType.Linear })
       }
@@ -47,6 +51,9 @@ export struct HomePage {
         .height(54)
         .fontColor('#000')
         .backgroundColor('#00ffff')
+        .onClick(() => {
+          this.navStack.pushPathByName('learn',undefined)
+        })
     }
     .padding({
       top: 80,
@@ -58,7 +65,7 @@ export struct HomePage {
     .linearGradient({
       colors: [
         [0xff00ffff, 0.0], // 颜色断点1的颜色和比重，对应组件在180°方向上的起始位置
-        [0xffF8F9FB, 0.7],// 颜色断点2的颜色和比重，对应组件在180°方向上的终点位置
+        [0xffF8F9FB, 0.2],// 颜色断点2的颜色和比重，对应组件在180°方向上的终点位置
       ]
     })
   }
