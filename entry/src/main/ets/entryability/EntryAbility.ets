@@ -15,7 +15,7 @@ export default class EntryAbility extends UIAbility {
 
     AppStorage.setOrCreate("windowStage", windowStage);
 
-    windowStage.loadContent('pages/Index', async(err) => {
+    windowStage.loadContent('pages/Login', async(err) => {
       PersistentStorage.persistProp('learnIdx', []);
 
       let windowClass: window.Window = windowStage.getMainWindowSync();
