@@ -102,6 +102,7 @@ export struct VerifyCodeComponentWithoutCursor {
       this.codeText += text;
       if (this.codeText.length === this.verifyCodeLength) {
         // logger.info("VerifyCode: %{public}s", this.codeText);
+        console.log(this.codeText)
       }
     })
 

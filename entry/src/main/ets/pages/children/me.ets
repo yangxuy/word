@@ -21,49 +21,41 @@ export struct MePage {
   }
 
   build() {
-    Stack({ alignContent: Alignment.TopStart }) {
-      Image($r('app.media.person_bg'))
-        .width('100%')
-        .objectFit(ImageFit.Fill)
+    Column({ space: 20 }) {
+      Row().height(40)
+      Row({ space: 20 }) {
+        Image($r('app.media.ic_avatar'))
+          .width(45)
 
-      Column({ space: 20 }) {
-        Row().height(40)
-        Row({ space: 20 }) {
-          Image($r('app.media.ic_avatar'))
-            .width(45)
-
-          Text("135****69").fontWeight(FontWeight.Bold)
-        }
-
-        Row({ space: 12 }) {
-          Text('累计已学 0  ,   坚持 0 天')
-            .fontSize(18)
-        }
-        .cardStyle()
-
-        Column({ space: 24 }) {
-          this.NextPage("我的日历")
-          this.NextPage("我的学习")
-          this.NextPage("我的词汇量")
-        }
-        .alignItems(HorizontalAlign.Start)
-        .cardStyle()
-
-        Column({ space: 24 }) {
-          this.NextPage("我的搜藏")
-          this.NextPage("我的图书")
-          this.NextPage("我的阅读")
-        }
-        .alignItems(HorizontalAlign.Start)
-        .cardStyle()
+        Text("135****69").fontWeight(FontWeight.Bold)
       }
-      .width('100%')
-      .height('100%')
-      .padding(16)
+
+      Row({ space: 12 }) {
+        Text('累计已学 0  ,   坚持 0 天')
+          .fontSize(18)
+      }
+      .cardStyle()
+
+      Column({ space: 24 }) {
+        this.NextPage("我的日历")
+        this.NextPage("我的学习")
+        this.NextPage("我的词汇量")
+      }
       .alignItems(HorizontalAlign.Start)
-      .justifyContent(FlexAlign.Start)
+      .cardStyle()
+
+      Column({ space: 24 }) {
+        this.NextPage("我的搜藏")
+        this.NextPage("我的图书")
+        this.NextPage("我的阅读")
+      }
+      .alignItems(HorizontalAlign.Start)
+      .cardStyle()
     }
     .width('100%')
     .height('100%')
+    .padding(16)
+    .alignItems(HorizontalAlign.Start)
+    .justifyContent(FlexAlign.Start)
   }
 }

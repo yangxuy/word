@@ -74,6 +74,7 @@ struct Index {
     .height('100%')
     .hideTitleBar(true)
     .backgroundColor('#F8F9FB')
+    .backgroundImage($r('app.media.person_bg'))
     .mode(NavigationMode.Stack)
     .navDestination(this.PageMap)
   }

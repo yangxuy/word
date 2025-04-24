@@ -1,14 +1,17 @@
-import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
+import { Ability, AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
+import { kvStore } from '../pages/database/kvStore';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
+    kvStore.init(this)
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
+
     AppStorage.setOrCreate("windowStage", windowStage);
 
     windowStage.loadContent('pages/Index', (err) => {

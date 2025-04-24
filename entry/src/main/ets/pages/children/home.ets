@@ -8,7 +8,7 @@ export struct HomePage {
         Image($r('app.media.sort')).width(20).fillColor('#000')
         Button("查询｜中英文单词")
           .layoutWeight(1)
-          .backgroundColor("#a0faf8f8")
+          .backgroundColor("#ccc")
         Image($r('app.media.xiaoxi_xiao')).width(20).fillColor('#000')
       }
 
@@ -49,24 +49,18 @@ export struct HomePage {
       Button("开始学习")
         .width('100%')
         .height(54)
-        .fontColor('#000')
-        .backgroundColor('#00ffff')
+        .fontColor('#fff')
+        .backgroundColor('#A033A634')
         .onClick(() => {
           this.navStack.pushPathByName('learn',undefined)
         })
     }
     .padding({
-      top: 80,
+      top: 50,
       left: 16,
       right: 16
     })
     .height('100%')
     .width('100%')
-    .linearGradient({
-      colors: [
-        [0xff00ffff, 0.0], // 颜色断点1的颜色和比重，对应组件在180°方向上的起始位置
-        [0xffF8F9FB, 0.2],// 颜色断点2的颜色和比重，对应组件在180°方向上的终点位置
-      ]
-    })
   }
 }
