@@ -35,12 +35,16 @@ export struct VerifyCodeComponentWithoutCursor {
     },
   };
   private codeIndexArray: Array<number> = Array.from([0, 1, 2, 3, 4, 5]);
+  onClear: () => void = () => {
+  };
   // 注册路由返回函数，案例插件不触发
-  popRouter: () => void = () => {};
+  popRouter: () => void = () => {
+  };
 
   aboutToAppear(): void {
     // 注册返回监听，包括点击手机返回键返回与侧滑返回
     this.listenBackPress();
+    this.listenClear()
   }
 
   async attachAndListen(): Promise<void> {
@@ -48,6 +52,16 @@ export struct VerifyCodeComponentWithoutCursor {
     await this.inputController.attach(true, this.textConfig);
     this.listen();
     this.isKeyboardShow = true;
+  }
+
+  listenClear() {
+    let innerEvent: emitter.InnerEvent = {
+      eventId: 6
+    };
+    // 收到eventId为5的事件后执行回调函数
+    emitter.on(innerEvent, () => {
+      this.codeText = ''
+    });
   }
 
   listenBackPress() {
@@ -70,6 +84,7 @@ export struct VerifyCodeComponentWithoutCursor {
     this.off();
     // 关闭事件监听
     emitter.off(5);
+    emitter.off(6);
   }
 
   async attach() {
@@ -88,17 +103,14 @@ export struct VerifyCodeComponentWithoutCursor {
     this.isKeyboardShow = false;
   }
 
-
   listen() {
     if (this.isListen) {
       return;
     }
-    console.log('add listen')
     this.inputController.on("insertText", (text: string) => {
       if (this.codeText.length >= this.verifyCodeLength || text === ' ') {
         return;
       }
-      console.log('text',text)
       this.codeText += text;
       if (this.codeText.length === this.verifyCodeLength) {
         // logger.info("VerifyCode: %{public}s", this.codeText);

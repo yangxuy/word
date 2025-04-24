@@ -1,6 +1,7 @@
 import { Word } from '../model/word';
 import { getRandomInt } from '../util/util';
 import { VerifyCodeComponentWithoutCursor } from './component/textinput';
+import { emitter } from '@kit.BasicServicesKit';
 
 @Component
 export struct Exam {
@@ -32,6 +33,9 @@ export struct Exam {
         Row().layoutWeight(1)
         Button("下一题").alignSelf(ItemAlign.End)
           .onClick(() => {
+            emitter.emit({
+              eventId: 6
+            })
             this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
           })
         Row().height(80)
