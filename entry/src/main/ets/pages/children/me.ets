@@ -1,3 +1,5 @@
+import { router } from "@kit.ArkUI"
+
 @Component
 export struct MePage {
   @Styles
@@ -51,6 +53,18 @@ export struct MePage {
       }
       .alignItems(HorizontalAlign.Start)
       .cardStyle()
+
+
+      Button("退出登录")
+        .width('100%')
+        .height(48)
+        .margin({top:70})
+        .onClick(()=>{
+          router.replaceUrl({
+            url:"pages/Login"
+          })
+        })
+
     }
     .width('100%')
     .height('100%')

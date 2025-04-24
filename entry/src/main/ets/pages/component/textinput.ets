@@ -129,7 +129,6 @@ export struct VerifyCodeComponentWithoutCursor {
     })
     .backgroundColor(Color.Transparent)
     .height(50)
-    .margin({ left: $r("sys.float.ohos_id_card_margin_start"), right: $r("sys.float.ohos_id_card_margin_start") })
     .defaultFocus(true)
     .onClick(() => {
       this.attachAndListen();

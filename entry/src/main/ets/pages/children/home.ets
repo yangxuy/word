@@ -3,15 +3,7 @@ export struct HomePage {
   @Consume navStack: NavPathStack;
 
   build() {
-    Column() {
-      Row({ space: 18 }) {
-        Image($r('app.media.sort')).width(20).fillColor('#000')
-        Button("查询｜中英文单词")
-          .layoutWeight(1)
-          .backgroundColor("#ccc")
-        Image($r('app.media.xiaoxi_xiao')).width(20).fillColor('#000')
-      }
-
+    Column({ space: 20 }) {
       Row().height(68)
       Text('已打卡天数')
       Text('0').fontSize(24).fontWeight(FontWeight.Bold)
@@ -52,7 +44,16 @@ export struct HomePage {
         .fontColor('#fff')
         .backgroundColor('#A033A634')
         .onClick(() => {
-          this.navStack.pushPathByName('learn',undefined)
+          this.navStack.pushPathByName('learn', undefined)
+        })
+
+      Button("开始考试")
+        .width('100%')
+        .height(54)
+        .fontColor('#fff')
+        .backgroundColor('#A033A634')
+        .onClick(() => {
+          this.navStack.pushPathByName('exam', undefined)
         })
     }
     .padding({

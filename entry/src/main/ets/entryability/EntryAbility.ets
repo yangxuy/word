@@ -2,6 +2,7 @@ import { Ability, AbilityConstant, ConfigurationConstant, UIAbility, Want } from
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { kvStore } from '../pages/database/kvStore';
+import { buffer } from '@kit.ArkTS';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -14,7 +15,9 @@ export default class EntryAbility extends UIAbility {
 
     AppStorage.setOrCreate("windowStage", windowStage);
 
-    windowStage.loadContent('pages/Index', (err) => {
+    windowStage.loadContent('pages/Index', async(err) => {
+      PersistentStorage.persistProp('learnIdx', []);
+
       let windowClass: window.Window = windowStage.getMainWindowSync();
       windowClass.setWindowLayoutFullScreen(true)
 
@@ -37,6 +40,10 @@ export default class EntryAbility extends UIAbility {
           AppStorage.setOrCreate('bottomHeight', bottomRectHeight);
         }
       });
+
+      let data: Uint8Array = getContext(this).resourceManager.getRawFileContentSync("word.json");
+      const json = buffer.from(data.buffer).toString('utf-8');
+      AppStorage.setOrCreate("jsonWord", JSON.parse(json));
     });
   }
 }

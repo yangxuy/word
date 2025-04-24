@@ -1,6 +1,7 @@
 import { DictionaryPage } from './children/dictionary';
 import { HomePage } from './children/home';
 import { MePage } from './children/me';
+import { Exam } from './exam';
 import { Learn } from './Learn';
 
 @Entry
@@ -39,6 +40,8 @@ struct Index {
   PageMap(name: string) {
     if (name == 'learn') {
       Learn()
+    }else if(name=='exam'){
+      Exam()
     }
   }
 
