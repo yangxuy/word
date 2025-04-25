@@ -3,6 +3,7 @@ import { HomePage } from './children/home';
 import { MePage } from './children/me';
 import { Exam } from './exam';
 import { Learn } from './Learn';
+import { WordSearch } from './WordSearch';
 
 @Entry
 @Component
@@ -42,6 +43,8 @@ struct Index {
       Learn()
     }else if(name=='exam'){
       Exam()
+    }else if(name='search'){
+      WordSearch()
     }
   }
 

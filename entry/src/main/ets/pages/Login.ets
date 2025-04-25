@@ -1,4 +1,11 @@
 import { promptAction, router } from '@kit.ArkUI';
+import { buffer } from '@kit.ArkTS';
+import { generateRandomToken } from '../util/util';
+
+interface GeneratedTypeLiteralInterface_1 {
+  phone: string;
+  password: string;
+}
 
 @Entry
 @Component
@@ -35,6 +42,55 @@ struct Login {
       })
   }
 
+  onLogin() {
+    if (!this.checked) {
+      this.getUIContext().getPromptAction().showToast({
+        message: "请先勾选协议",
+        duration: 2000,
+        showMode: promptAction.ToastShowMode.TOP_MOST,
+        bottom: 80,
+        backgroundColor: "red",
+      })
+      return
+    }
+
+    if (this.loginByPassword) {
+      if (!this.password || !this.phone) {
+        this.getUIContext().getPromptAction().showToast({
+          message: "请输入手机号或者密码",
+          duration: 2000,
+          showMode: promptAction.ToastShowMode.TOP_MOST,
+          bottom: 80,
+          backgroundColor: "red",
+        })
+        return
+      }
+
+      let data: Uint8Array = getContext(this).resourceManager.getRawFileContentSync("user.json");
+      const json = buffer.from(data.buffer).toString('utf-8');
+      const uses: Array<GeneratedTypeLiteralInterface_1> = JSON.parse(json)
+      const index = uses.findIndex((value) => value.phone == this.phone && value.password == this.password)
+      if (index > -1) {
+        const token = generateRandomToken(168)
+        console.log('手机号:', this.phone)
+        console.log('密码:', this.password)
+        console.log('token认证:', token)
+        router.replaceUrl({ url: 'pages/Index' });
+      } else {
+        this.getUIContext().getPromptAction().showToast({
+          message: "手机号或者密码输出错误",
+          duration: 2000,
+          showMode: promptAction.ToastShowMode.TOP_MOST,
+          bottom: 80,
+          backgroundColor: "red",
+        })
+        return
+      }
+    } else {
+      router.replaceUrl({ url: 'pages/Index' });
+    }
+  }
+
   build() {
     Column({ space: 16 }) {
       Image($r('app.media.app_icon')).width(120)
@@ -57,30 +113,7 @@ struct Login {
       Button("登录")
         .width('100%')
         .onClick(() => {
-          if (!this.checked) {
-            this.getUIContext().getPromptAction().showToast({
-              message: "请先勾选协议",
-              duration: 2000,
-              showMode: promptAction.ToastShowMode.TOP_MOST,
-              bottom: 80,
-              backgroundColor: "red",
-            })
-            return
-          }
-          if (this.loginByPassword) {
-            if (!this.password || !this.phone) {
-              this.getUIContext().getPromptAction().showToast({
-                message: "请输入手机号或者密码",
-                duration: 2000,
-                showMode: promptAction.ToastShowMode.TOP_MOST,
-                bottom: 80,
-                backgroundColor: "red",
-              })
-            }
-            return
-          }
-
-          router.replaceUrl({ url: 'pages/Index' });
+          this.onLogin()
         })
 
       Row().height(40)
