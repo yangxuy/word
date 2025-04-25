@@ -15,11 +15,15 @@ export default class EntryAbility extends UIAbility {
 
     AppStorage.setOrCreate("windowStage", windowStage);
 
-    windowStage.loadContent('pages/Login', async(err) => {
+    windowStage.loadContent('pages/Index', async(err) => {
+      // 已经学习的单词
       PersistentStorage.persistProp('learnIdx', []);
+      // 不认识的单词
+      PersistentStorage.persistProp('unknownIdx', []);
 
       let windowClass: window.Window = windowStage.getMainWindowSync();
-      windowClass.setWindowLayoutFullScreen(true)
+      // windowClass.setWindowLayoutFullScreen(true)
+      windowClass.setSpecificSystemBarEnabled('navigationIndicator', false)
 
       let type = window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR; // 以导航条避让为例
       let avoidArea = windowClass.getWindowAvoidArea(type);

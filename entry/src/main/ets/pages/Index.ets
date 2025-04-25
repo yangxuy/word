@@ -1,9 +1,10 @@
 import { DictionaryPage } from './children/dictionary';
 import { HomePage } from './children/home';
 import { MePage } from './children/me';
+import { ErrorText } from './errorText';
 import { Exam } from './exam';
 import { Learn } from './Learn';
-import { WordSearch } from './WordSearch';
+import { LearnText } from './learnText';
 
 @Entry
 @Component
@@ -39,12 +40,15 @@ struct Index {
 
   @Builder
   PageMap(name: string) {
+
     if (name == 'learn') {
       Learn()
-    }else if(name=='exam'){
+    } else if (name == 'exam') {
       Exam()
-    }else if(name='search'){
-      WordSearch()
+    } else if (name == 'errorText') {
+      ErrorText()
+    } else if (name == 'hasLearn') {
+      LearnText()
     }
   }
 

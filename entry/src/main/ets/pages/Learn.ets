@@ -5,29 +5,37 @@ import { getRandomInt } from "../util/util"
 export struct Learn {
   @StorageProp('jsonWord') jsonWord: object | undefined = undefined
   @StorageLink('learnIdx') learnIdx: Array<number> = []
+  @StorageLink('unknownIdx') unknownIdx: Array<number> = []
   @State wordList: Array<Word> = []
   @State @Watch('onChangeIndex') selectedIndex: number = 0
+  @Consume navStack: NavPathStack;
 
   aboutToAppear(): void {
-    Object.values(this.jsonWord!).forEach((word: Array<Word>) => {
-      word.forEach(w => {
-        this.wordList.push(w)
-      })
-    })
+    const allWorks: Array<Array<Word>> = Object.values(this.jsonWord!);
+    this.wordList = allWorks.flat()
 
-    this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
+    const params: Array<ESObject> = this.navStack.getParamByName("learn")
+    if (params?.length && params[0]) {
+      const word: Word = params[0]
+      this.selectedIndex = this.wordList.findIndex((w) => w.word == word.word)
+    } else {
+      this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
+    }
   }
 
-  onChangeIndex(){
+  onChangeIndex() {
     if (this.learnIdx.indexOf(this.selectedIndex) == -1) {
       this.learnIdx.push(this.selectedIndex)
     }
   }
 
+  nextWord() {
+    this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
+  }
+
   build() {
     NavDestination() {
       Column({ space: 20 }) {
-        Row().height(20)
         Row() {
           Column({ space: 8 }) {
             Text("今日复习")
@@ -58,13 +66,19 @@ export struct Learn {
         Text(this.wordList[this.selectedIndex].mean).fontColor("#000")
 
         Row().height(100)
-        Row({space:20}) {
+        Row({ space: 20 }) {
           Button("不认识", { type: ButtonType.Normal })
             .borderRadius(4)
             .width(100)
             .height(100)
             .fontColor('#F6752C')
             .backgroundColor("#eee")
+            .onClick(() => {
+              if (!this.unknownIdx.includes(this.selectedIndex)) {
+                this.unknownIdx.push(this.selectedIndex)
+              }
+              this.nextWord()
+            })
 
           Button("我认识", { type: ButtonType.Normal })
             .borderRadius(4)
@@ -72,17 +86,14 @@ export struct Learn {
             .height(100)
             .fontColor('#4EDD90')
             .backgroundColor("#eee")
-            .onClick(()=>{
-              this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
+            .onClick(() => {
+              this.nextWord()
             })
         }
       }
       .padding({ left: 16, right: 16 })
     }
     .title("学习")
-    .padding({
-      top: 40,
-    })
     .backgroundColor('#F8F9FB')
     .backgroundImage($r('app.media.person_bg'))
   }

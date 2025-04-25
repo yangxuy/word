@@ -11,12 +11,12 @@ export struct Exam {
   @State selectedIndex: number = 0
 
   aboutToAppear(): void {
-    Object.values(this.jsonWord!).forEach((word: Array<Word>) => {
-      word.forEach(w => {
-        this.wordList.push(w)
-      })
-    })
+    const allWorks: Array<Array<Word>> = Object.values(this.jsonWord!);
+    this.wordList = allWorks.flat()
+    this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
+  }
 
+  onNext() {
     this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
   }
 
@@ -28,7 +28,18 @@ export struct Exam {
           .fontSize(30)
           .fontWeight(FontWeight.Bold)
 
-        VerifyCodeComponentWithoutCursor()
+        VerifyCodeComponentWithoutCursor({
+          currentWordIdx: this.selectedIndex,
+          currentWord: this.wordList[this.selectedIndex].word,
+          onFinish: (text: string, cu: string) => {
+            console.log("当前的单词", cu, text)
+          },
+          onError: () => {
+          },
+          onRight: () => {
+            this.onNext()
+          }
+        })
 
         Row().layoutWeight(1)
         Button("下一题").alignSelf(ItemAlign.End)
@@ -49,9 +60,6 @@ export struct Exam {
       })
     }
     .title("背单词")
-    .padding({
-      top: 40,
-    })
     .backgroundColor('#F8F9FB')
     .backgroundImage($r('app.media.person_bg'))
   }

@@ -1,6 +1,22 @@
+import { Word } from "../../model/word";
+
 @Component
 export struct HomePage {
   @Consume navStack: NavPathStack;
+  @StorageProp('jsonWord') jsonWord: object | undefined = undefined
+  @StorageLink('learnIdx') @Watch('onLearn') learnIdx: Array<number> = []
+  @State words: Array<Word> = []
+  @State percent: string = '0'
+
+  aboutToAppear(): void {
+    const allWorks: Array<Array<Word>> = Object.values(this.jsonWord!);
+    this.words = allWorks.flat()
+    this.onLearn()
+  }
+
+  onLearn() {
+    this.percent = (this.learnIdx.length / this.words.length).toFixed(3)
+  }
 
   build() {
     Column({ space: 20 }) {
@@ -21,8 +37,8 @@ export struct HomePage {
 
         Row().height(20)
         Row() {
-          Text("已学0.0%")
-          Text("0/1654词")
+          Text(`已学${this.percent}%`)
+          Text(`${this.learnIdx.length}/${this.words.length}词`)
             .fontSize(12)
         }
         .width('100%')
@@ -30,7 +46,7 @@ export struct HomePage {
         .justifyContent(FlexAlign.SpaceBetween)
 
         Row().height(8)
-        Progress({ value: 24, total: 100, type: ProgressType.Linear })
+        Progress({ value: this.learnIdx.length, total: this.words.length, type: ProgressType.Linear })
       }
       .borderRadius(8)
       .backgroundColor("#fff")
@@ -42,7 +58,6 @@ export struct HomePage {
         .width('100%')
         .height(54)
         .fontColor('#fff')
-        .backgroundColor('#A033A634')
         .onClick(() => {
           this.navStack.pushPathByName('learn', undefined)
         })
@@ -51,7 +66,6 @@ export struct HomePage {
         .width('100%')
         .height(54)
         .fontColor('#fff')
-        .backgroundColor('#A033A634')
         .onClick(() => {
           this.navStack.pushPathByName('exam', undefined)
         })

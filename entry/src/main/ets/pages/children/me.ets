@@ -2,6 +2,8 @@ import { router } from "@kit.ArkUI"
 
 @Component
 export struct MePage {
+  @Consume navStack: NavPathStack;
+
   @Styles
   cardStyle(){
     .borderRadius(8)
@@ -11,7 +13,7 @@ export struct MePage {
   }
 
   @Builder
-  NextPage(title: string) {
+  NextPage(title: string, callback?: Function) {
     Row() {
       Text(title)
         .fontSize(16)
@@ -19,7 +21,9 @@ export struct MePage {
 
       Image($r('app.media.next'))
         .width(16)
-    }
+    }.onClick(() => {
+      callback?.()
+    })
   }
 
   build() {
@@ -39,8 +43,12 @@ export struct MePage {
       .cardStyle()
 
       Column({ space: 24 }) {
-        this.NextPage("我的日历")
-        this.NextPage("我的学习")
+        this.NextPage("错题本", () => {
+          this.navStack.pushPathByName('errorText', undefined)
+        })
+        this.NextPage("我的学习", () => {
+          this.navStack.pushPathByName('hasLearn', undefined)
+        })
         this.NextPage("我的词汇量")
       }
       .alignItems(HorizontalAlign.Start)
@@ -58,10 +66,10 @@ export struct MePage {
       Button("退出登录")
         .width('100%')
         .height(48)
-        .margin({top:70})
-        .onClick(()=>{
+        .margin({ top: 70 })
+        .onClick(() => {
           router.replaceUrl({
-            url:"pages/Login"
+            url: "pages/Login"
           })
         })
 

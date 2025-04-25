@@ -1,5 +1,6 @@
 import { inputMethod } from '@kit.IMEKit';
 import { emitter } from '@kit.BasicServicesKit';
+import { promptAction } from '@kit.ArkUI';
 
 @Extend(Text)
 function verifyCodeUnitStyle() {
@@ -22,11 +23,13 @@ function verifyCodeUnitStyle() {
 @Component
 export struct VerifyCodeComponentWithoutCursor {
   @State codeText: string = "";
+  @Prop @Watch('onChangeWord') currentWord: string;
+  @Prop currentWordIdx: number;
+  @StorageLink('unknownIdx') unknownIdx: Array<number> = []
   private readonly verifyID: string = "verifyCodeComponent";
   private inputController: inputMethod.InputMethodController = inputMethod.getController();
   // 监听键盘弹出收起状态
   @State isKeyboardShow: boolean = false;
-  private verifyCodeLength: number = 6;
   private isListen: boolean = false;
   private textConfig: inputMethod.TextConfig = {
     inputAttribute: {
@@ -34,17 +37,27 @@ export struct VerifyCodeComponentWithoutCursor {
       enterKeyType: inputMethod.EnterKeyType.GO
     },
   };
-  private codeIndexArray: Array<number> = Array.from([0, 1, 2, 3, 4, 5]);
   onClear: () => void = () => {
+  };
+  onFinish: (text: string, cu: string) => void = () => {
+  };
+  onError: () => void = () => {
+  };
+  onRight: () => void = () => {
   };
   // 注册路由返回函数，案例插件不触发
   popRouter: () => void = () => {
   };
 
   aboutToAppear(): void {
+    console.log(this.currentWord)
     // 注册返回监听，包括点击手机返回键返回与侧滑返回
     this.listenBackPress();
     this.listenClear()
+  }
+
+  onChangeWord() {
+    this.codeText = ""
   }
 
   async attachAndListen(): Promise<void> {
@@ -108,13 +121,35 @@ export struct VerifyCodeComponentWithoutCursor {
       return;
     }
     this.inputController.on("insertText", (text: string) => {
-      if (this.codeText.length >= this.verifyCodeLength || text === ' ') {
+      if (this.codeText.length >= this.currentWord.length || text === ' ') {
         return;
       }
       this.codeText += text;
-      if (this.codeText.length === this.verifyCodeLength) {
-        // logger.info("VerifyCode: %{public}s", this.codeText);
-        console.log(this.codeText)
+      if (this.codeText.length === this.currentWord.length) {
+        if (this.codeText != this.currentWord) {
+          this.getUIContext().getPromptAction().showToast({
+            message: "回答错误",
+            duration: 2000,
+            showMode: promptAction.ToastShowMode.TOP_MOST,
+            bottom: 80,
+            backgroundColor: "red",
+          })
+          if (!this.unknownIdx.includes(this.currentWordIdx)) {
+            this.unknownIdx.push(this.currentWordIdx)
+          }
+          this.onError()
+        } else {
+          this.getUIContext().getPromptAction().showToast({
+            message: "回答正确",
+            duration: 2000,
+            showMode: promptAction.ToastShowMode.TOP_MOST,
+            bottom: 80,
+            backgroundColor: "red",
+          })
+          this.codeText = ""
+          this.onRight()
+        }
+        this.onFinish(this.codeText, this.currentWord)
       }
     })
 
@@ -130,8 +165,8 @@ export struct VerifyCodeComponentWithoutCursor {
   @Builder
   buildVerifyCodeComponent() {
     Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceBetween }) {
-      ForEach(this.codeIndexArray, (item: number, index: number) => {
-        Text(this.codeText[item])
+      ForEach(this.currentWord.split(''), (item: number, index: number) => {
+        Text(this.codeText[index] ?? "")
           .verifyCodeUnitStyle()
       }, (item: number, index: number) => item.toString())
     }
