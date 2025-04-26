@@ -16,6 +16,16 @@ export struct LearnText {
     TextInput()
   }
 
+  @Builder
+  BuildMenus() {
+    Image($r('app.media.delete'))
+      .width(22)
+      .margin({ top: 18, right: 16 })
+      .onClick(() => {
+        this.learnIdx = []
+      })
+  }
+
   build() {
     NavDestination() {
       List({ space: 10 }) {
@@ -44,6 +54,7 @@ export struct LearnText {
       .padding({ left: 16, right: 16 })
     }
     .title('已学单词')
+    .menus(this.BuildMenus())
     .backgroundColor('#F8F9FB')
     .backgroundImage($r('app.media.person_bg'))
   }
