@@ -13,7 +13,8 @@ struct Login {
   @State loginByPassword: boolean = true;
   private phone: string = ''
   private password: string = ''
-  @State checked: boolean = false
+  @State checked: boolean = true
+  @StorageLink('userPhone') userPhone: string = ""
 
   @Styles
   normalStyle() {
@@ -75,6 +76,7 @@ struct Login {
         console.log('手机号:', this.phone)
         console.log('密码:', this.password)
         console.log('token认证:', token)
+        this.userPhone = this.phone.slice(0, 3) + '****' + this.phone.slice(7);
         router.replaceUrl({ url: 'pages/Index' });
       } else {
         this.getUIContext().getPromptAction().showToast({
@@ -88,6 +90,7 @@ struct Login {
       }
     } else {
       router.replaceUrl({ url: 'pages/Index' });
+      this.userPhone = "游客模式";
     }
   }
 
@@ -106,7 +109,6 @@ struct Login {
             this.password = v
           })
       } else {
-        Text("189****06")
         Text('华为绑定账户号码')
       }
 
@@ -125,7 +127,7 @@ struct Login {
       })
 
       Row() {
-        Toggle({ type: ToggleType.Checkbox, isOn: false })
+        Toggle({ type: ToggleType.Checkbox, isOn: this.checked })
           .onChange((v) => this.checked = v)
 
         Text('已阅读并同意《用户协议》《隐私政策》和《儿童隐私政策》')

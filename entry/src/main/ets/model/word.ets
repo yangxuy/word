@@ -36,4 +36,5 @@ export interface LearnDayProp {
   time: string,
   word: number,
   duration: number,
+  timer: number,
 }

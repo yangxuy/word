@@ -6,6 +6,7 @@ export struct ErrorText {
   @StorageLink('unknownIdx') unknownIdx: Array<number> = []
   @State selectedIndex: number = 0;
   @State words: Array<Word> = []
+  @Consume navStack: NavPathStack;
 
   aboutToAppear(): void {
     this.words = Object.values(this.jsonWord!).flat()
@@ -30,9 +31,9 @@ export struct ErrorText {
               }
               .alignItems(HorizontalAlign.Start)
 
-              Button("已学会")
+              Button("去考试")
                 .onClick(() => {
-                  this.unknownIdx.splice(index, 1)
+                  this.navStack.pushPathByName('exam', this.words[idx])
                 })
             }
             .width('100%')

@@ -9,12 +9,15 @@ export struct Learn {
   @State wordList: Array<Word> = []
   @State @Watch('onChangeIndex') selectedIndex: number = 0
   @Consume navStack: NavPathStack;
-  @StorageLink('learnDay') learnDay: LearnDayProp = { word: 0, time: '0', duration: 0 }
-  private startTime: number = 0
+  @StorageLink('learnDay') learnDay: LearnDayProp = {
+    word: 0,
+    time: '0',
+    duration: 0,
+    timer: 0
+  }
   private timerId: number = 0
 
   aboutToAppear(): void {
-    this.startTime = Date.now()
     const allWorks: Array<Array<Word>> = Object.values(this.jsonWord!);
     this.wordList = allWorks.flat()
     const params: Array<ESObject> = this.navStack.getParamByName("learn")
@@ -24,11 +27,14 @@ export struct Learn {
     } else {
       this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
     }
+
     const getDay = getToday()
+
     if (this.learnDay.time != getDay) {
       this.learnDay.duration = 0;
       this.learnDay.time = getDay;
       this.learnDay.word = 0;
+      this.learnDay.timer++;
     }
     this.timerId = setInterval(() => {
       this.learnDay.duration++;

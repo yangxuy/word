@@ -7,13 +7,22 @@ import { emitter } from '@kit.BasicServicesKit';
 export struct Exam {
   @StorageProp('jsonWord') jsonWord: object | undefined = undefined
   @StorageLink('learnIdx') learnIdx: Array<number> = []
+  @StorageLink('unknownIdx') unknownIdx: Array<number> = []
   @State wordList: Array<Word> = []
   @State selectedIndex: number = 0
+  @Consume navStack: NavPathStack;
 
   aboutToAppear(): void {
     const allWorks: Array<Array<Word>> = Object.values(this.jsonWord!);
     this.wordList = allWorks.flat()
     this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
+    const params: Array<ESObject> = this.navStack.getParamByName("exam")
+    if (params?.length && params[0]) {
+      const word: Word = params[0]
+      this.selectedIndex = this.wordList.findIndex((w) => w.word == word.word)
+    } else {
+      this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
+    }
   }
 
   onNext() {
@@ -37,6 +46,10 @@ export struct Exam {
           onError: () => {
           },
           onRight: () => {
+            const index = this.unknownIdx.indexOf(this.selectedIndex)
+            if (index > -1) {
+              this.unknownIdx.splice(index, 1)
+            }
             this.onNext()
           }
         })

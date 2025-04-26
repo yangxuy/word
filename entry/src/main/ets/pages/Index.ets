@@ -40,7 +40,6 @@ struct Index {
 
   @Builder
   PageMap(name: string) {
-
     if (name == 'learn') {
       Learn()
     } else if (name == 'exam') {

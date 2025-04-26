@@ -1,4 +1,4 @@
-import { Word } from "../../model/word";
+import { LearnDayProp, Word } from "../../model/word";
 
 @Component
 export struct HomePage {
@@ -7,7 +7,9 @@ export struct HomePage {
   @StorageLink('learnIdx') @Watch('onLearn') learnIdx: Array<number> = []
   @State words: Array<Word> = []
   @State percent: string = '0'
+  @State currentType: number = 3;
   private list: Array<string> = ['初中', '高中', '大学', '四级']
+  @StorageLink('learnDay') learnDay: LearnDayProp | undefined = undefined
 
   aboutToAppear(): void {
     const allWorks: Array<Array<Word>> = Object.values(this.jsonWord!);
@@ -21,18 +23,18 @@ export struct HomePage {
 
   build() {
     Column({ space: 20 }) {
-      Text('已打卡天数')
-      Text('0').fontSize(24).fontWeight(FontWeight.Bold)
+      Text('学习天数')
+      Text(`${this.learnDay?.timer ?? '0'}`).fontSize(24).fontWeight(FontWeight.Bold)
 
       Grid() {
-        ForEach(this.list, (item: string) => {
+        ForEach(this.list, (item: string, index: number) => {
           GridItem() {
             Text(item)
           }
-          .backgroundColor('rgba(13, 187, 60, 0.09)')
+          .backgroundColor(this.currentType == index ? 'rgba(13, 187, 60, 0.09)' : '#fff')
           .borderRadius(7)
           .onClick(() => {
-            this.navStack.pushPathByName('learn', undefined)
+            this.currentType = index;
           })
         })
       }

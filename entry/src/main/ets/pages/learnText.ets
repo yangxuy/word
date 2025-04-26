@@ -29,11 +29,6 @@ export struct LearnText {
                 Text(this.words[idx].mean)
               }
               .alignItems(HorizontalAlign.Start)
-
-              Button("已学会")
-                .onClick(() => {
-                  this.learnIdx.splice(index, 1)
-                })
             }
             .width('100%')
             .justifyContent(FlexAlign.SpaceBetween)

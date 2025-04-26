@@ -12,19 +12,9 @@ export default class EntryAbility extends UIAbility {
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
-
-    AppStorage.setOrCreate("windowStage", windowStage);
-
-    windowStage.loadContent('pages/Index', async (err) => {
-      // 已经学习的单词
-      PersistentStorage.persistProp('learnIdx', []);
-      // 不认识的单词
-      PersistentStorage.persistProp('unknownIdx', []);
-      // 今天学习时间和时长
-      PersistentStorage.persistProp('learnDay', { time: 0, word: '', duration: 0 });
-
+    windowStage.loadContent("pages/Index", async (err) => {
+      AppStorage.setOrCreate("windowStage", windowStage);
       let windowClass: window.Window = windowStage.getMainWindowSync();
-      // windowClass.setWindowLayoutFullScreen(true)
       windowClass.setSpecificSystemBarEnabled('navigationIndicator', false)
 
       let type = window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR; // 以导航条避让为例
@@ -50,6 +40,20 @@ export default class EntryAbility extends UIAbility {
       let data: Uint8Array = getContext(this).resourceManager.getRawFileContentSync("word.json");
       const json = buffer.from(data.buffer).toString('utf-8');
       AppStorage.setOrCreate("jsonWord", JSON.parse(json));
+
+      // 已经学习的单词
+      PersistentStorage.persistProp('learnIdx', []);
+      // 不认识的单词
+      PersistentStorage.persistProp('unknownIdx', []);
+      // 今天学习时间和时长
+      PersistentStorage.persistProp('learnDay', {
+        time: 0,
+        word: '',
+        duration: 0,
+        timer: 0
+      });
+      // 账户存储
+      PersistentStorage.persistProp('userPhone', "游客模式");
     });
   }
 }

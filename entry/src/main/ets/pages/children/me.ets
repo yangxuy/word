@@ -3,6 +3,7 @@ import { router } from "@kit.ArkUI"
 @Component
 export struct MePage {
   @Consume navStack: NavPathStack;
+  @StorageProp('userPhone') userPhone: string = ""
 
   @Styles
   cardStyle(){
@@ -32,15 +33,8 @@ export struct MePage {
       Row({ space: 20 }) {
         Image($r('app.media.ic_avatar'))
           .width(45)
-
-        Text("135****69").fontWeight(FontWeight.Bold)
+        Text(`${this.userPhone}`).fontWeight(FontWeight.Bold)
       }
-
-      Row({ space: 12 }) {
-        Text('累计已学 0  ,   坚持 0 天')
-          .fontSize(18)
-      }
-      .cardStyle()
 
       Column({ space: 24 }) {
         this.NextPage("错题本", () => {
@@ -49,19 +43,9 @@ export struct MePage {
         this.NextPage("我的学习", () => {
           this.navStack.pushPathByName('hasLearn', undefined)
         })
-        this.NextPage("我的词汇量")
       }
       .alignItems(HorizontalAlign.Start)
       .cardStyle()
-
-      Column({ space: 24 }) {
-        this.NextPage("我的搜藏")
-        this.NextPage("我的图书")
-        this.NextPage("我的阅读")
-      }
-      .alignItems(HorizontalAlign.Start)
-      .cardStyle()
-
 
       Button("退出登录")
         .width('100%')
