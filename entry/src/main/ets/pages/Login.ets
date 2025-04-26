@@ -126,12 +126,14 @@ struct Login {
         this.loginByPassword = true
       })
 
-      Row() {
+      Row({ space: 8 }) {
         Toggle({ type: ToggleType.Checkbox, isOn: this.checked })
           .onChange((v) => this.checked = v)
 
         Text('已阅读并同意《用户协议》《隐私政策》和《儿童隐私政策》')
-      }.margin({
+      }
+      .padding(16)
+      .margin({
         top: 90
       })
     }
