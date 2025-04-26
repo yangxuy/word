@@ -50,7 +50,6 @@ export struct VerifyCodeComponentWithoutCursor {
   };
 
   aboutToAppear(): void {
-    console.log(this.currentWord)
     // 注册返回监听，包括点击手机返回键返回与侧滑返回
     this.listenBackPress();
     this.listenClear()
@@ -144,7 +143,6 @@ export struct VerifyCodeComponentWithoutCursor {
             duration: 2000,
             showMode: promptAction.ToastShowMode.TOP_MOST,
             bottom: 80,
-            backgroundColor: "red",
           })
           this.codeText = ""
           this.onRight()
@@ -165,10 +163,10 @@ export struct VerifyCodeComponentWithoutCursor {
   @Builder
   buildVerifyCodeComponent() {
     Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceBetween }) {
-      ForEach(this.currentWord.split(''), (item: number, index: number) => {
+      ForEach(this.currentWord.split(''), (item: string, index: number) => {
         Text(this.codeText[index] ?? "")
           .verifyCodeUnitStyle()
-      }, (item: number, index: number) => item.toString())
+      })
     }
     .id(this.verifyID)
     .onBlur(() => {

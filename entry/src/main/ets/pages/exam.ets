@@ -10,6 +10,7 @@ export struct Exam {
   @StorageLink('unknownIdx') unknownIdx: Array<number> = []
   @State wordList: Array<Word> = []
   @State selectedIndex: number = 0
+  @State isFromErro: boolean = false
   @Consume navStack: NavPathStack;
 
   aboutToAppear(): void {
@@ -17,7 +18,9 @@ export struct Exam {
     this.wordList = allWorks.flat()
     this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
     const params: Array<ESObject> = this.navStack.getParamByName("exam")
+
     if (params?.length && params[0]) {
+      this.isFromErro = true
       const word: Word = params[0]
       this.selectedIndex = this.wordList.findIndex((w) => w.word == word.word)
     } else {
@@ -50,18 +53,24 @@ export struct Exam {
             if (index > -1) {
               this.unknownIdx.splice(index, 1)
             }
-            this.onNext()
+            if (!this.isFromErro) {
+              this.onNext()
+            } else {
+              this.navStack.pop()
+            }
           }
         })
 
         Row().layoutWeight(1)
-        Button("下一题").alignSelf(ItemAlign.End)
-          .onClick(() => {
-            emitter.emit({
-              eventId: 6
+        if (!this.isFromErro) {
+          Button("下一题").alignSelf(ItemAlign.End)
+            .onClick(() => {
+              emitter.emit({
+                eventId: 6
+              })
+              this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
             })
-            this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
-          })
+        }
         Row().height(80)
       }
       .justifyContent(FlexAlign.Start)
