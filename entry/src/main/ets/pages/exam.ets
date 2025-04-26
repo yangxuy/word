@@ -22,7 +22,7 @@ export struct Exam {
     if (params?.length && params[0]) {
       this.isFromErro = true
       const word: Word = params[0]
-      this.selectedIndex = this.wordList.findIndex((w) => w.word == word.word)
+      this.selectedIndex = this.wordList.findIndex((w) => (w.word == word.word && w.mean == word.mean))
     } else {
       this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
     }
@@ -49,7 +49,9 @@ export struct Exam {
           onError: () => {
           },
           onRight: () => {
+            console.log('---', JSON.stringify(this.unknownIdx), this.selectedIndex)
             const index = this.unknownIdx.indexOf(this.selectedIndex)
+            console.log("index", index)
             if (index > -1) {
               this.unknownIdx.splice(index, 1)
             }
