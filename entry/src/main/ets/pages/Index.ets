@@ -15,7 +15,7 @@ struct Index {
   @Provide navStack: NavPathStack = new NavPathStack()
 
   @Builder
-  tabBuilder(title: string, targetIndex: number, selectedImg: Resource, normalImg: Resource) {
+  tabBuilder(title: string, targetIndex: number, selectedImg: Resource) {
     Column() {
       Image(selectedImg)
         .fillColor(this.currentIndex === targetIndex ? '#000' : '#6B6B6B')
@@ -58,17 +58,17 @@ struct Index {
         TabContent() {
           HomePage()
         }
-        .tabBar(this.tabBuilder('单词本', 0, $r('app.media.word'), $r('app.media.word')))
+        .tabBar(this.tabBuilder('首页', 0, $r('app.media.word')))
 
         TabContent() {
           DictionaryPage()
         }
-        .tabBar(this.tabBuilder('单词本', 1, $r('app.media.find'), $r('app.media.find')))
+        .tabBar(this.tabBuilder('单词本', 1, $r('app.media.find')))
 
         TabContent() {
           MePage()
         }
-        .tabBar(this.tabBuilder('单词本', 2, $r('app.media.user'), $r('app.media.user')))
+        .tabBar(this.tabBuilder('我的', 2, $r('app.media.user')))
       }
       .height('100%')
       .scrollable(false)

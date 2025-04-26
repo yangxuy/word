@@ -31,3 +31,9 @@ export interface Word {
   mean: string
   word: string
 }
+
+export interface LearnDayProp {
+  time: string,
+  word: number,
+  duration: number,
+}

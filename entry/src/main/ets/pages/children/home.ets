@@ -7,6 +7,7 @@ export struct HomePage {
   @StorageLink('learnIdx') @Watch('onLearn') learnIdx: Array<number> = []
   @State words: Array<Word> = []
   @State percent: string = '0'
+  private list: Array<string> = ['初中', '高中', '大学', '四级']
 
   aboutToAppear(): void {
     const allWorks: Array<Array<Word>> = Object.values(this.jsonWord!);
@@ -20,14 +21,30 @@ export struct HomePage {
 
   build() {
     Column({ space: 20 }) {
-      Row().height(68)
       Text('已打卡天数')
       Text('0').fontSize(24).fontWeight(FontWeight.Bold)
-      Row().height(30)
+
+      Grid() {
+        ForEach(this.list, (item: string) => {
+          GridItem() {
+            Text(item)
+          }
+          .backgroundColor('rgba(13, 187, 60, 0.09)')
+          .borderRadius(7)
+          .onClick(() => {
+            this.navStack.pushPathByName('learn', undefined)
+          })
+        })
+      }
+      .columnsGap(10)
+      .rowsGap(15)
+      .height(100)
+      .rowsTemplate('1fr 1fr')
+      .columnsTemplate('1fr 1fr')
 
       Column() {
         Row() {
-          Text("四级真题核心词汇书")
+          Text("核心词汇书")
           Text("词表")
             .fontSize(12)
         }
@@ -53,7 +70,7 @@ export struct HomePage {
       .padding(16)
       .width('100%')
 
-      Row().height(80)
+      Row().height(40)
       Button("开始学习")
         .width('100%')
         .height(54)

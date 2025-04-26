@@ -1,5 +1,5 @@
-import { Word } from "../model/word"
-import { getRandomInt } from "../util/util"
+import { LearnDayProp, Word } from "../model/word"
+import { getRandomInt, getToday } from "../util/util"
 
 @Component
 export struct Learn {
@@ -9,11 +9,14 @@ export struct Learn {
   @State wordList: Array<Word> = []
   @State @Watch('onChangeIndex') selectedIndex: number = 0
   @Consume navStack: NavPathStack;
+  @StorageLink('learnDay') learnDay: LearnDayProp = { word: 0, time: '0', duration: 0 }
+  private startTime: number = 0
+  private timerId: number = 0
 
   aboutToAppear(): void {
+    this.startTime = Date.now()
     const allWorks: Array<Array<Word>> = Object.values(this.jsonWord!);
     this.wordList = allWorks.flat()
-
     const params: Array<ESObject> = this.navStack.getParamByName("learn")
     if (params?.length && params[0]) {
       const word: Word = params[0]
@@ -21,6 +24,15 @@ export struct Learn {
     } else {
       this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
     }
+    const getDay = getToday()
+    if (this.learnDay.time != getDay) {
+      this.learnDay.duration = 0;
+      this.learnDay.time = getDay;
+      this.learnDay.word = 0;
+    }
+    this.timerId = setInterval(() => {
+      this.learnDay.duration++;
+    }, 60000)
   }
 
   onChangeIndex() {
@@ -31,6 +43,11 @@ export struct Learn {
 
   nextWord() {
     this.selectedIndex = getRandomInt(0, this.wordList.length - 1)
+    this.learnDay.word++;
+  }
+
+  aboutToDisappear() {
+    clearInterval(this.timerId)
   }
 
   build() {
@@ -38,24 +55,19 @@ export struct Learn {
       Column({ space: 20 }) {
         Row() {
           Column({ space: 8 }) {
-            Text("今日复习")
-            Text("0/10")
-          }
-
-          Column({ space: 8 }) {
-            Text("今日新词")
-            Text("0/10")
+            Text("今日学习")
+            Text(`${this.learnDay.word}`)
           }
 
           Column({ space: 8 }) {
             Text("学习时间")
-            Text("1min")
+            Text(`${this.learnDay.duration}min`)
           }
         }
         .borderRadius(2)
         .padding(16)
         .backgroundColor('#fff')
-        .justifyContent(FlexAlign.SpaceBetween)
+        .justifyContent(FlexAlign.SpaceAround)
         .width('100%')
 
         Text(this.wordList[this.selectedIndex].word)

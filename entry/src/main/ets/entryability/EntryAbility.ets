@@ -15,11 +15,13 @@ export default class EntryAbility extends UIAbility {
 
     AppStorage.setOrCreate("windowStage", windowStage);
 
-    windowStage.loadContent('pages/Index', async(err) => {
+    windowStage.loadContent('pages/Index', async (err) => {
       // 已经学习的单词
       PersistentStorage.persistProp('learnIdx', []);
       // 不认识的单词
       PersistentStorage.persistProp('unknownIdx', []);
+      // 今天学习时间和时长
+      PersistentStorage.persistProp('learnDay', { time: 0, word: '', duration: 0 });
 
       let windowClass: window.Window = windowStage.getMainWindowSync();
       // windowClass.setWindowLayoutFullScreen(true)
